@@ -83,7 +83,8 @@ void TaskLoader::loadKiva(const std::string fname, MapLoaderCost &ml){
         assert(s<ml.endpoints.size());
         assert(g<ml.endpoints.size());
         Task* new_task = new Task(i,t,ml.endpoints[s],ml.endpoints[g]);
-        new_task->ideal_end_time = ml.getDistance(ml.endpoints[s],ml.endpoints[g]) + t;
+        /* new_task->ideal_end_time = ml.getDistance(ml.endpoints[s],ml.endpoints[g]) + t; */
+        new_task->ideal_end_time = tg;
 
         if(t > last_release_time){
             last_release_time = t;

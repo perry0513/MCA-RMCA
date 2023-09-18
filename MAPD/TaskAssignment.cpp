@@ -565,7 +565,11 @@ int TaskAssignment::prioritized_planning(vector<PathEntry>& path, vector<ActionE
         }
         if (start == goal && start_time>=min_end_time) {
             if ( actions[i].action_type == ACTION_TYPE::DROP_OFF && start_time > actions[i].task->ideal_end_time){
-                total_delay += start_time - actions[i].task->ideal_end_time;
+                /* total_delay += start_time - actions[i].task->ideal_end_time; */
+                int slack = start_time - actions[i].task->ideal_end_time;
+                if (slack < 0) slack = 0;
+                if (slack > total_delay) 
+                    total_delay = slack;
             }
 
             actions[i].real_current_total_delay = total_delay;
@@ -584,7 +588,11 @@ int TaskAssignment::prioritized_planning(vector<PathEntry>& path, vector<ActionE
         nodes_expanded += planner.LL_num_expanded;
 
         if ( actions[i].action_type == ACTION_TYPE::DROP_OFF ){
-            total_delay += planner.path.back().timeStep - actions[i].task->ideal_end_time;
+            /* total_delay += planner.path.back().timeStep - actions[i].task->ideal_end_time; */
+            int slack = planner.path.back().timeStep - actions[i].task->ideal_end_time;
+            if (slack < 0) slack = 0;
+            if (slack > total_delay) 
+                total_delay = slack;
         }
 
         actions[i].real_current_total_delay = total_delay;
@@ -748,7 +756,11 @@ bool TaskAssignment::updateActions(vector<ActionEntry> &actions, Agent* agent, i
 
 
         if(a.action_type==ACTION_TYPE::DROP_OFF){
-            total_delay = total_delay + (a.ideal_action_time - a.task->ideal_end_time);
+            /* total_delay = total_delay + (a.ideal_action_time - a.task->ideal_end_time); */
+            int slack = a.ideal_action_time - a.task->ideal_end_time;
+            if (slack < 0) slack = 0;
+            if (slack > total_delay)
+                total_delay = slack;
             a.current_total_delay = total_delay;
         }
         else{
